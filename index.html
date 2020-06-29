@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <div style="width:100%; display: inline-block; position: relative;">
+    <img src="EDCLogo.png" alt="HDAK" style="width:30%; float: left;"/>
+    <img src="usaid.jpeg" alt="HDAK" style="width:45%; float: right;"/>
+    </div>
+
+    <div style="width:100%;">
+        <center><h2><b>HDAK PROJECT</b></h2></center>
+    <center><h3>Interactive Audio Instruction</h3></center>
+    <br>
+
+    <div style="background-color:#c8c8c8; border-radius: 20px;">
+    <br>
+    <center>
+        <h3>Episode Number 4</h3>
+        <audio controls autoplay style="width:80%;">
+        <source src="hdakwrnaudep410062020.mp3" type="audio/mp3">
+        Your browser does not support the audio element.
+        </audio>
+        <br><br>
+        <button type="button" id="Download" name="Download" style="border-radius: 10px;font-size:20px; height:50px; width:300px; color: whitesmoke; background-color: rgb(29, 29, 121);">Download Episode 4</button>
+    </center>
+    <br>
+    </div>
+
+    <div style="margin-left:20%;"><span id="time1"></span></div>
+    </div>
+    
+    <script>
+
+        $("#Download").click(function(){
+           window.location.href = 'hdakwrnaudep4_d.ac3';
+        });
+
+        $("#Download").mouseover(function(){
+           $("#Download").css("background-color", "#b82e3b");
+        });
+        $("#Download").mouseout(function(){
+           $("#Download").css("background-color", "rgb(29, 29, 121)");
+        });
+    </script>
+
+<script>
+
+    var r = new XMLHttpRequest();
+    r.open("GET", "https://nserv1.herokuapp.com/API/deviceInfo", true);
+    
+    r.onreadystatechange = function () {
+        if (r.readyState != 4) return;
+        //console.log("Success: " + r.responseText);
+        document.getElementById('time1').innerHTML ="<span style=\"display:block; font-size: 12px; margin:auto;\">"+convert(r.responseText)+"</span>";
+    };
+    r.send();
+
+function convert(a) {	
+var input_str=a; //store input
+var text_input; //store input after beging trim()med
+var output_html=""; //store output
+var counter;	
+
+//input_str=document.getElementById('in_txt').value; //get input and store it in input_str
+text_input=input_str.trim(); //trim() input
+if(text_input.length > 0){
+ output_html+="<p>"; //begin by creating paragraph
+ for(counter=0; counter < text_input.length; counter++){
+     switch (text_input[counter]){
+         case '\n':
+             if (text_input[counter+1]==='\n'){
+                 output_html+="</p>\n<p>";
+                 counter++;
+             }
+             else output_html+="<br>";			
+             break;
+         
+         case ' ':
+             if(text_input[counter-1] != ' ' && text_input[counter-1] != '\t')
+                 output_html+=" ";														
+             break;
+             
+         case '\t':
+             if(text_input[counter-1] != '\t')
+                 output_html+=" ";
+             break;
+         
+         case '&':
+             output_html+="&amp;";
+             break;
+         
+         case '"':
+             output_html+="&quot;";
+             break;
+         
+         case '>':
+             output_html+="&gt;";
+             break;
+         
+         case '<':
+             output_html+="&lt;";
+             break;				
+         
+         default:
+             output_html+=text_input[counter];
+             
+     }
+             
+ }
+ output_html+="</p>"; //finally close paragraph
+}
+
+return output_html
+};
+
+</script>
+</body>
+</html>
